@@ -55,7 +55,7 @@ public class SellerDaoJDBC implements SellerDao {
 					"SELECT seller.*, departament.Name as DepName"
 					+ " FROM seller INNER JOIN departament"
 					+ " ON seller.DepartamentId = departament.Id"
-					+ " WHERE seller.Id = ?");
+					+ " WHERE seller.Id = ?"); // Interrogação só funciona no Java n no SQL 
 		// Escolhendo o ? e passando um valor nele
 		ps.setInt(1, 3);	
 		
@@ -74,21 +74,19 @@ public class SellerDaoJDBC implements SellerDao {
 
 				if (rs.next()) {
 			// Criando o Objeto Departament a partir do resultado da query
-			Departament dep = new Departament();
-			dep.setId(rs.getInt("DepartamentId"));// estamos pegando o ID do departamento
-			// na tabela seller pelo ResultSet, usamos getInt porque o campo
-			// DepartamentId tem valores inteiros
-			dep.setName(rs.getString("DepName"));
-			
+			// usando o istancianteNomeDaObjeto para instanciar a função
+			// pois para deixar o código mais organizado
+			// vamos deixar as informaçõe que pega os dados da tabela
+			// e transforma em objeto dentro de uma função
+			// abaixp só declaramos o objeto chamando a função e pasando
+			// o rs ResultSet como argumento que traz o resultado da query
+			// e a função vai pegar esse resultado da query e armazena
+			// de forma consolidada no objeto
+			Departament dep = instancianteDepartment(rs);
 			//Criando o objeto seller a partir do resultado da query
-			Seller obj = new Seller();
-			obj.setId(rs.getInt("Id"));
-			obj.setName(rs.getString("Name"));
-			obj.setEmail(rs.getString("Email"));
-			obj.setBaseSalary(rs.getDouble("BaseSalary"));
-			obj.setBirthDate(rs.getDate("BirthDate")); // é só passa o nome da coluna
-			obj.setDepartment(dep); // aqui no objeto filho
-			// colocamos o objeto inteiro
+			Seller obj = instanciateSeller(rs, dep); //aqui eu passo o dep
+			//  que é o objeto filho que eu instanciei acim
+			
 			return obj;
 		}
 		else {
@@ -104,7 +102,37 @@ public class SellerDaoJDBC implements SellerDao {
 			// no programa principal depois
 		}
 		
+		
+		
+		
 	}
+
+	private Departament instancianteDepartment(ResultSet rs) throws SQLException {
+		// nesse método de função que pega a tabela e transforma em objeto
+		// nós propragamos a exceção pr que ela seja tratada no método
+		// de ação findById
+		Departament dep =  new Departament();
+		 new Departament();
+			dep.setId(rs.getInt("DepartamentId"));// estamos pegando o ID do departamento
+			// na tabela seller pelo ResultSet, usamos getInt porque o campo
+			// DepartamentId tem valores inteiros
+			dep.setName(rs.getString("DepName"));
+			return dep;
+	}
+	
+	private Seller instanciateSeller(ResultSet rs, Departament dep) throws SQLException {
+		Seller obj = new Seller();
+		new Seller();
+		obj.setId(rs.getInt("Id"));
+		obj.setName(rs.getString("Name"));
+		obj.setEmail(rs.getString("Email"));
+		obj.setBaseSalary(rs.getDouble("BaseSalary"));
+		obj.setBirthDate(rs.getDate("BirthDate")); // é só passa o nome da coluna
+		obj.setDepartment(dep); // aqui no objeto filho
+		// colocamos o objeto inteiro
+		return obj;
+	}
+	
 
 	@Override
 	public List<Seller> findAll() {

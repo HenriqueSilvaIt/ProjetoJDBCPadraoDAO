@@ -22,13 +22,16 @@ public class ProgramJDBC {
 		// SellerDaoJDBC, ele somente declara a interface e a classe DaoFactory 
 		// que é a classe de instanciação passando .métodoresponsável pela classe
 		// de implementacao
-		SellerDao sellerDao = DaoFactory.createSellerDao();
 		
+		
+		
+		System.out.println("==== TESTE 1: seller findById ====");
+		
+		SellerDao sellerDao = DaoFactory.createSellerDao();
 		// Classe da tabela, varaivel, nome da inteface com 1º letra mminusculo
 		// método que queira utilizar
 		Seller seller = sellerDao.findById(3);
-	
-		
+
 		System.out.println(seller);
 		
 	}
