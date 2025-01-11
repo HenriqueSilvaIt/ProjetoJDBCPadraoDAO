@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -82,7 +85,7 @@ public class SellerDaoJDBC implements SellerDao {
 			// o rs ResultSet como argumento que traz o resultado da query
 			// e a função vai pegar esse resultado da query e armazena
 			// de forma consolidada no objeto
-			Departament dep = instancianteDepartment(rs);
+			Departament dep = instanciateDepartment(rs);
 			//Criando o objeto seller a partir do resultado da query
 			Seller obj = instanciateSeller(rs, dep); //aqui eu passo o dep
 			//  que é o objeto filho que eu instanciei acim
@@ -102,12 +105,9 @@ public class SellerDaoJDBC implements SellerDao {
 			// no programa principal depois
 		}
 		
-		
-		
-		
 	}
 
-	private Departament instancianteDepartment(ResultSet rs) throws SQLException {
+	private Departament instanciateDepartment(ResultSet rs) throws SQLException {
 		// nesse método de função que pega a tabela e transforma em objeto
 		// nós propragamos a exceção pr que ela seja tratada no método
 		// de ação findById
@@ -133,11 +133,66 @@ public class SellerDaoJDBC implements SellerDao {
 		return obj;
 	}
 	
-
 	@Override
 	public List<Seller> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Seller> findByDepartment(Departament department) {
+		PreparedStatement  ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement( 
+					" SELECT seller.*, departament.Name as DepName"
+					+ " FROM seller INNER JOIN departament"
+					+ " ON seller.DepartamentId = departament.Id"
+					+ " WHERE departamentId = ?"
+					+ " ORDER BY Name");
+			
+			ps.setInt(1, department.getId());
+			rs = ps.executeQuery();
+			
+			List<Seller> list = new ArrayList<>();
+			
+			Map<Integer, Departament> map  = new HashMap<>();
+			
+			while (rs.next()) { // nesse caso tem que ser while
+				// porque o department pode ter 0 ou mais vendedores
+				
+				
+				//Precisamos instanciar o departamento só uma vez
+				// e como estamos usando o while precisamos fazer uma verificação
+				// se este departemento com esste ID
+				// já foi instanciado, por isso usamos o map
+				// declarando objeto e passand o ID da query como resultado
+				// e depois passamos novamente no map put para armazenar
+				// no map e no dep (objeto) esse valor
+				// ai o iF vai dar entender que ja foi declarado
+				// e vai fazer isso só para o seller
+				// pega informacao do IT e verifica se existe
+				Departament dep = map.get(rs.getInt("DepartamentId")); 
+			
+				if ( dep == null) {
+					dep = instanciateDepartment(rs);
+					// armazena no map o departamento
+					map.put(rs.getInt("DepartamentId"), dep); // int ID e objeto DEP
+				} 
+				Seller obj = instanciateSeller(rs, dep);
+				list.add(obj);
+	
+			}
+			 return list;
+			 
+			 
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(ps);
+			DB.closeResultSet(rs);
+		}
+		
 	}
 	
 	

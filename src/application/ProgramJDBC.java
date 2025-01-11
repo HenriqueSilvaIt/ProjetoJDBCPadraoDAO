@@ -1,6 +1,5 @@
 package application;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -31,9 +30,14 @@ public class ProgramJDBC {
 		// Classe da tabela, varaivel, nome da inteface com 1º letra mminusculo
 		// método que queira utilizar
 		Seller seller = sellerDao.findById(3);
-
 		System.out.println(seller);
 		
+		System.out.println("\n==== TESTE 2: seller findByIdDepartment ====");
+		Departament department = new Departament(2, null);
+		List<Seller> list = sellerDao.findByDepartment(department);
+		for (Seller s : list) {
+			System.out.println(s);
+		}
 	}
 
 }
