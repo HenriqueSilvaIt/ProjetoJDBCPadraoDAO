@@ -1,5 +1,6 @@
 package application;
 
+import java.util.Date;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -32,17 +33,26 @@ public class ProgramJDBC {
 		Seller seller = sellerDao.findById(3);
 		System.out.println(seller);
 		
+		// retorna os vendedores pelo ID do departamento
 		System.out.println("\n==== TESTE 2: seller findByIdDepartment ====");
 		Departament department = new Departament(2, null);
 		List<Seller> list = sellerDao.findByDepartment(department);
 		for (Seller s : list) {
 			System.out.println(s);
 		}
+		
+		// Retorna os vendedores de todos os departamentos
 		System.out.println("\n==== TESTE 3: seller findAll ====");
 		list = sellerDao.findAll();
 		for (Seller s : list) {
 			System.out.println(s);
 		}
+		
+		System.out.println("==== TESTE 4: seller Insert ====");
+		Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0,
+				department); // aqui importamos o java util.date
+		sellerDao.insert(newSeller);
+		System.out.println("Inserted, New ID = " + newSeller.getId());
 	}
 
 }
