@@ -2,6 +2,7 @@ package application;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
@@ -11,6 +12,8 @@ import model.entities.Seller;
 public class ProgramJDBC {
 
 	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
 		
 		Departament obj = new Departament(1, "Books");
 		System.out.println(obj);
@@ -61,5 +64,14 @@ public class ProgramJDBC {
 		sellerDao.update(seller); // fazendo o update  e passando objeto vendedor como
 		// argumento
 		System.out.println(seller.getName());
+		
+		System.out.println("\n==== TESTE 6: seller Update ====");
+		System.out.println("Enter Id for delete test: ");
+		int id = sc.nextInt();
+		sellerDao.deleteById(id);
+		System.out.println("Delete completed sucessfully!");
+		sc.close();
 	}	
+	
+
 }
