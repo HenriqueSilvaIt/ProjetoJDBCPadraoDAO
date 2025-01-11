@@ -48,11 +48,18 @@ public class ProgramJDBC {
 			System.out.println(s);
 		}
 		
+		// Inseri um novo vendedor na tabela
 		System.out.println("==== TESTE 4: seller Insert ====");
 		Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0,
 				department); // aqui importamos o java util.date
 		sellerDao.insert(newSeller);
 		System.out.println("Inserted, New ID = " + newSeller.getId());
-	}
 
+		System.out.println("\n==== TESTE 5: seller Update ====");
+		seller = sellerDao.findById(1); // pegando o vendedor de ID 1
+		seller.setName("Martha Wain"); // colocando o nome dele de marta
+		sellerDao.update(seller); // fazendo o update  e passando objeto vendedor como
+		// argumento
+		System.out.println(seller.getName());
+	}	
 }

@@ -66,8 +66,27 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void update(Seller obj) {
-		// TODO Auto-generated method stub
-
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement(
+				"UPDATE seller "
+				+ " SET Name=?, Email=?, BirthDate=?, BaseSalary=?, DepartamentId=?"
+				+ " WHERE Id=?",
+				Statement.RETURN_GENERATED_KEYS);
+				
+		ps.setString(1, obj.getName());
+		ps.setString(2, obj.getEmail());
+		ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+		ps.setDouble(4, obj.getBaseSalary());
+		ps.setInt(5, obj.getDepartment().getId()); // id departamento
+		ps.setInt(6, obj.getId()); // id vendedo
+		
+		ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(ps);
+		}
 	}
 
 	@Override
@@ -89,7 +108,7 @@ public class SellerDaoJDBC implements SellerDao {
 																										// funciona no
 																										// Java n no SQL
 			// Escolhendo o ? e passando um valor nele
-			ps.setInt(1, 3);
+			ps.setInt(1, id);
 
 			// Abaixo estamos fazendo o ResultSet rs = executar o ps
 			// e o resultado do PreparedStament ps, vai ser armazenado no resultset Rs
