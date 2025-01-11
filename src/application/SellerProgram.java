@@ -9,7 +9,7 @@ import model.dao.SellerDao;
 import model.entities.Departament;
 import model.entities.Seller;
 
-public class ProgramJDBC {
+public class SellerProgram {
 
 	public static void main(String[] args) {
 		
@@ -66,7 +66,7 @@ public class ProgramJDBC {
 		System.out.println(seller.getName());
 		
 		System.out.println("\n==== TESTE 6: seller Update ====");
-		System.out.println("Enter Id for delete test: ");
+		System.out.print("Enter Id for delete test: ");
 		int id = sc.nextInt();
 		sellerDao.deleteById(id);
 		System.out.println("Delete completed sucessfully!");
